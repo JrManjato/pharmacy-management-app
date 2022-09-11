@@ -1,0 +1,22 @@
+.table_row {
+   background-color: white;
+   border-bottom: 1px solid rgb(234, 233, 233);
+   padding-bottom: 2rem;
+}
+
+.table_header {
+    border-bottom: 1px solid rgb(234, 233, 233);
+    text-align: center;
+}
+
+.table_header_cell{
+ color: rgb(2, 2, 2);    
+}
+
+.table_cell {
+   padding: 3% 1.5%;
+}
+
+.header_title {
+    margin-right: 1rem;
+}
