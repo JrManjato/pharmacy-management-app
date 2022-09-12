@@ -1,3 +1,7 @@
+.table-striped {
+    width: 100%;
+}
+
 .table_row {
    background-color: white;
    border-bottom: 1px solid rgb(234, 233, 233);
@@ -10,13 +14,14 @@
 }
 
 .table_header_cell{
- color: rgb(2, 2, 2);    
+    color: rgb(2, 2, 2);   
 }
 
 .table_cell {
-   padding: 3% 1.5%;
+    padding-block: 1.5rem;
+   text-align: center;
 }
 
 .header_title {
-    margin-right: 1rem;
+   
 }

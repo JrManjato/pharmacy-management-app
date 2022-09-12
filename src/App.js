@@ -12,8 +12,8 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import welcome from "./pages/welcome";
 import Home from "./pages/Home";
-import Tables from "./pages/Tables";
-import Billing from "./pages/Billing";
+import Tables from "./pages/Medicine";
+import History from "./pages/History";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
@@ -32,7 +32,7 @@ function App() {
           <Route exact path="/" component={welcome} />
           <Route exact path="/dashboard" component={Home} />
           <Route exact path="/tables" component={Tables} />
-          <Route exact path="/billing" component={Billing} />
+          <Route exact path="/billing" component={History} />
           <Route exact path="/profile" component={Profile} />
           <Redirect from="*" to="/dashboard" />
         </Main>

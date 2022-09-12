@@ -11,17 +11,17 @@ const SearchContainer = tw.div`
 `;
 
 const SearchText = tw.h2`
-  text-xl
+  pt-1
+  text-sm
   text-gray-600
-  mr-6
+  mr-4
 `;
 
 const Input = tw.input`
   h-8
-  border-2
   border-solid
   outline-none
-  p-4
+  p-2
   rounded-lg
 `;
 
