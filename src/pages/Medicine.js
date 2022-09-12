@@ -26,8 +26,7 @@ import { Link } from "react-router-dom";
 // Images
 import pencil from "../assets/images/pencil.svg";
 
-import { GlobalFilter } from "../products/globalFilter";
-import { Products } from "../products";
+import { Products } from "../medicine/MedicineData";
 
 const { Title } = Typography;
 
@@ -42,7 +41,7 @@ function Tables() {
             <Card
               bordered={false}
               className="criclebox tablespace mb-24"
-              title="Projects Table"
+              title="Liste des médicaments"
               extra={
                 <>
                   <Radio.Group onChange={onChange} defaultValue="all">

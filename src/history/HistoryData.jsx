@@ -1,11 +1,13 @@
-import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { useGlobalFilter, useSortBy, useTable } from "react-table";
-import { SortAscendingOutlined, SortDescendingOutlined} from '@ant-design/icons';
+
+import { SortAscendingOutlined, SortDescendingOutlined, DeleteOutlined} from '@ant-design/icons';
 import tw from "twin.macro";
-import { GlobalFilter } from "./globalFilter";
+
+import { GlobalFilter } from "../httpRequest/globalFilter";
+import { getHistories } from "../httpRequest/HttpRequest";
+
 import { Button } from "antd";
-import './table.css';
 
 const Table = tw.table`
 
@@ -30,44 +32,23 @@ const TableData = tw.td`
 `;
 
 
-export function Products() {
+export function HistoryTable() {
   const [products, setProducts] = useState([]);
-
-  const fetchProducts = async () => {
-    const response = await axios
-      .get("https://fakestoreapi.com/products")
-      .catch((err) => console.log(err));
-
-    if (response) {
-      const products = response.data;
-
-      console.log("Products: ", products);
-      console.log("Products[0]: ", products[0]);
-      setProducts(products);
-    }
-  };
 
   const productsData = useMemo(() => [...products], [products]);
 
-  const sousObjet = ['rate', 'count'];
-  const forHeader = ['Id', 'Titre', 'Prix', 'Déscription', 'Catégorie'];
+  const forHeader = ['Id', 'Description', 'Opération', 'Date', 'Quantité'];
 
   const productsColumns = useMemo(
     () =>
       products[0]
         ? Object.keys(products[0])
           .map((key, i) => {
-            if (key === "image") {
+            if (key === "medicine") {
               return {
-                Header: key,
+                Header: "Médicament",
                 accessor: key,
-                Cell: ({ value }) => <img src={value} alt="" width='50px' />
-              }
-            } else if (key === "rating") {
-              return {
-                Header: key,
-                accessor: key,
-                Cell: ({ value }) => <ul>{sousObjet.map((elt, i) => <li key={i++}>{value[elt]}</li>)}</ul>
+                Cell: ({ value }) => <span>{value["medicineName"]}</span>
               }
             }
             return { Header: forHeader[i], accessor: key };
@@ -92,12 +73,11 @@ export function Products() {
         id: "Add",
         Header: "Add",
         Cell: ({ row }) => (
-          <Button 
-          onClick={() => alert("Editing: " + row.values.rating.rate)}
-          className="tag-badge"
-          >
-            Add
-          </Button>
+            <DeleteOutlined 
+            onClick={() => alert("Delete Function")}
+            style={{ fontSize: '16px', color: 'red' }}
+            theme="outlined"
+            />
         ),
       },
     ]);
@@ -125,7 +105,7 @@ export function Products() {
   } = tableInstance;
 
   useEffect(() => {
-    fetchProducts();
+    getHistories(setProducts);
   }, []);
 
   const isEven = (idx) => idx % 2 === 0;
@@ -149,7 +129,7 @@ export function Products() {
                   <span className="header_title">
                     {column.render("Header")}
                   </span>
-                  {column.isSorted ? (column.isSortedDesc ? <SortAscendingOutlined /> : <SortDescendingOutlined />) : <SortDescendingOutlined />}
+                  {/* {column.isSorted ? (column.isSortedDesc ? <SortAscendingOutlined /> : <SortDescendingOutlined />) : <SortDescendingOutlined />} */}
                 </TableHeader>
               ))}
             </TableRow>
