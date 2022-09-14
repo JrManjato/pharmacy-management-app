@@ -13,7 +13,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import welcome from "./pages/welcome";
 import Home from "./pages/Home";
 import Tables from "./pages/Medicine";
-import History from "./pages/History";
+import HistoryFunc from "./pages/History.jsx";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
@@ -30,9 +30,9 @@ function App() {
         <Route path="/sign-in" exact component={SignIn} />
         <Main>
           <Route exact path="/" component={welcome} />
-          <Route exact path="/dashboard" component={Home} />
-          <Route exact path="/tables" component={Tables} />
-          <Route exact path="/billing" component={History} />
+          <Route exact path="/médicament" component={Tables} />
+          <Route exact path="/tables" component={Home} />
+          <Route exact path="/billing" component={HistoryFunc} />
           <Route exact path="/profile" component={Profile} />
           <Redirect from="*" to="/dashboard" />
         </Main>

@@ -9,6 +9,9 @@
 =========================================================
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+import axios from "axios";
+import React, { useEffect, useMemo, useState } from "react";
+import { showConfirm } from "../components/ux/AddConfirm";
 import {
   Row,
   Col,
@@ -31,7 +34,84 @@ import { Products } from "../medicine/MedicineData";
 const { Title } = Typography;
 
 function Tables() {
-  const onChange = (e) => console.log(`radio checked:${e.target.value}`);
+
+  const [products, setProducts] = useState([]);
+  const [treatmentList, setTreatmentList] = useState([]);
+  const [admissionList, setAdmissionList] = useState([]);
+  const [treatmentFilter, setTreatmentFilter] = useState();
+  const [admissionFilter, setAdmissionFilter] = useState();
+
+  const getTreatments = async () => {
+    const response = await axios
+      .get("http://localhost:8080/treatment-list")
+      .catch((err) => console.log(err));
+
+    if (response) {
+      const traitementNameList = response.data;
+      traitementNameList.unshift({
+        "idTreatment": 0,
+        "treatmentName": "Tout"
+      });
+      setTreatmentList(traitementNameList);
+    }
+  };
+
+  const getAdmission = async () => {
+    const response = await axios
+      .get("http://localhost:8080/admissions")
+      .catch((err) => console.log(err));
+
+    if (response) {
+      const admissionNameList = response.data;
+      admissionNameList.unshift({
+        "idAdmission": 0,
+        "admissionName": "Tout"
+      });
+      setAdmissionList(admissionNameList);
+    }
+  };
+
+  const getMedicinesByFilter = async () => {
+    console.log(treatmentFilter);
+    console.log(admissionFilter);
+
+    let treatmentFilterUrl = "http://localhost:8080/medicines?pageNumber=1&pageSize=10";
+
+    if ((treatmentFilter == null || treatmentFilter == "Tout") && (admissionFilter == null || admissionFilter == "Tout")) {
+      treatmentFilterUrl = "http://localhost:8080/medicines?pageNumber=1&pageSize=10";
+    } else if (treatmentFilter != null && admissionFilter == null || admissionFilter == "Tout") {
+      treatmentFilterUrl = "http://localhost:8080/medicines?treatmentName=" + treatmentFilter + "&pageNumber=1&pageSize=10";
+    } else if (admissionFilter != null && treatmentFilter == null || treatmentFilter == "Tout") {
+      treatmentFilterUrl = "http://localhost:8080/medicines?admissionName=" + admissionFilter + "&pageNumber=1&pageSize=10";
+    } else if (treatmentFilter && admissionFilter) {
+      treatmentFilterUrl = "http://localhost:8080/medicines?treatmentName=" + treatmentFilter + "&admissionName=" + admissionFilter + "&pageNumber=1&pageSize=10"
+    }
+
+
+
+    const response = await axios
+      .get(treatmentFilterUrl)
+      .catch((err) => console.log(err));
+
+    if (response) {
+      const medicines = response.data;
+      setProducts(medicines);
+    }
+  };
+
+
+  useEffect(() => {
+    getTreatments();
+    getAdmission();
+  }, [treatmentFilter, admissionFilter]);
+
+  const handleChangeSelectAdmission = (e) => {
+    setAdmissionFilter(e.currentTarget.value);
+  }
+
+  const handleChangeSelectTreatment = (e) => {
+    setTreatmentFilter(e.currentTarget.value);
+  }
 
   return (
     <>
@@ -44,21 +124,44 @@ function Tables() {
               title="Liste des médicaments"
               extra={
                 <>
-                  <Radio.Group onChange={onChange} defaultValue="all">
-                    <Radio.Button value="all">All</Radio.Button>
-                    <Radio.Button value="online">ONLINE</Radio.Button>
-                    <Radio.Button value="store">STORES</Radio.Button>
-                  </Radio.Group>
+                  <select name="task-evaluation" id="task-option" onChange={(e) => handleChangeSelectTreatment(e)}>
+                    {treatmentList.map((elt) => (
+                      <option key={`${elt.idTreatment}`} value={elt.treatmentName}>{elt.treatmentName}</option>
+                    ))}
+                  </select>
+                  <select name="task-evaluation" id="task-option" onChange={(e) => handleChangeSelectAdmission(e)}>
+                    {admissionList.map((elt) => (
+                      <option key={`${elt.idAdmission}`} value={elt.admissionName}>{elt.admissionName}</option>
+                    ))}
+                  </select>
+                  <Button
+                    onClick={getMedicinesByFilter}
+                    style={{ color: "rgb(25, 152, 255)", border: "1px solid rgb(25, 152, 255)" }}
+                  >
+                    Filtrer
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      showConfirm(
+                        <h4 style={{ fontSize: "1rem" }}>Ajouter un nouveau médicament</h4>,
+                        <>
+                          
+                        </>
+                      )}
+                      style={{ color: "green", border: "1px solid green" }}
+                    >
+                  Ajouter
+                </Button>
                 </>
               }
             >
-              <div className="table-responsive">
-                <Products />
-              </div>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+          <div className="table-responsive">
+            <Products products={products} setProducts={setProducts} />
+          </div>
+        </Card>
+      </Col>
+    </Row>
+      </div >
     </>
   );
 }

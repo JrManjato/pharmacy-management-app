@@ -1,0 +1,40 @@
+import axios from "axios";
+import { success, error } from "../components/ux/Message";
+
+export const putMedicines = async (setProducts, idMedicine, medicineName, treatmentList, admissionName, compartmentName) => {
+
+    const treatmentNameTable = [];
+
+    treatmentList.map((elt) => treatmentNameTable.push(elt.treatmentName));
+
+    console.log(idMedicine);
+    console.log(medicineName);
+    console.log(treatmentNameTable);
+    console.log(admissionName);
+    console.log(compartmentName);
+
+    const response = await axios
+        .put("http://localhost:8080/modify-medicine",
+        {
+            "idMedicine": 12,
+            "medicineName": medicineName,
+            "treatmentName": ["maux d'estomac", "maux de tete"],
+            "admissionName": "injectables",
+            "compartmentName": "C2"
+        })
+        .catch((err) => console.log(err));
+
+    if (response) {
+        success("L'élément a bien été modifié !");
+    }else {
+        error("L'opération a échoué.")
+    }
+};
+
+// {
+//     "idMedicine": idMedicine,
+//     "medicineName": medicineName,
+//     "treatmentName": treatmentName,
+//     "admissionName": admissionName,
+//     "compartmentName": compartmentName
+// }
