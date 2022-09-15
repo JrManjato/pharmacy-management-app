@@ -149,7 +149,7 @@ const data = [
   {
     title: "Les notifications s'afficheront ici.",
     description: <>{clockicon} Approvisionnement, il y a 2 jours</>
- }
+  }
   // {
   //   title: "New album by Travis Scott",
   //   description: <>{clockicon} 2 days ago</>,
@@ -394,14 +394,14 @@ function Header({
                   <Title level={5}>Barre de navigation fixe</Title>
                   <Switch onChange={(e) => handleFixedNavbar(e)} />
                 </div>
-                <div className="ant-docment">
+                {/* <div className="ant-docment">
                   <ButtonContainer>
                     <Button type="black" size="large">
                       FREE DOWNLOAD
                     </Button>
                     <Button size="large">VIEW DOCUMENTATION</Button>
                   </ButtonContainer>
-                </div>
+                </div> */}
                 {/* <div className="viewstar">
                   <a href="#pablo">{<StarOutlined />} Star</a>
                   <a href="#pablo"> 190</a>
@@ -412,14 +412,14 @@ function Header({
                     {/* Thank you for sharing! */}
                   </Title>
                   <ButtonContainer className="social">
-                    <Button type="black">{<TwitterOutlined />}TWEET</Button>
-                    <Button type="black">{<FacebookFilled />}SHARE</Button>
+                    <Button type="black"><a href="https://twitter.com/JRandriamanjato">{<TwitterOutlined />}TWEET</a></Button>
+                    <Button type="black"><a href="https://www.facebook.com/judicael.randriamanjato.3/">{<FacebookFilled />}Facebook</a></Button>
                   </ButtonContainer>
                 </div>
               </div>
             </div>
           </Drawer>
-          <Link to="/sign-in" className="btn-sign-in">
+          <Link to="/" className="btn-sign-in">
             {profile}
             <span>Se déconnecter</span>
           </Link>

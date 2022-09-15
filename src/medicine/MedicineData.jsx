@@ -39,7 +39,6 @@ const TableData = tw.td`
 
 
 export function Products({products, setProducts}) {
-  const [filter, setFilter] = useState();
   
   const productsData = useMemo(() => [...products], [products]);
 
@@ -61,7 +60,7 @@ export function Products({products, setProducts}) {
               return {
                 Header: "Admission",
                 accessor: key,
-                Cell: ({ value }) => <span>{value["admissionName"]}</span>
+                Cell: ({ value }) => <span>{value?.["admissionName"]}</span>
               }
             }
             else if (key === "compartment") {
@@ -136,6 +135,7 @@ export function Products({products, setProducts}) {
                   <span className="header_title">
                     {column.render("Header")}
                   </span>
+                  {column.isSorted ? (column.isSortedDesc ? " ▼" : " ▲") : " ▼"}
                   {/* {column.isSorted ? (column.isSortedDesc ? <SortAscendingOutlined /> : <SortDescendingOutlined />) : <SortDescendingOutlined />} */}
                 </TableHeader>
               ))}

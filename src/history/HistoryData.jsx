@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { useGlobalFilter, useSortBy, useTable } from "react-table";
 
@@ -5,7 +6,6 @@ import { SortAscendingOutlined, SortDescendingOutlined, DeleteOutlined } from '@
 import tw from "twin.macro";
 
 import { GlobalFilter } from "../httpRequest/globalFilter";
-import { getHistories } from "../httpRequest/Get";
 import { showConfirm } from '../components/ux/DeleteConfirm'
 
 import { Button } from "antd";
@@ -36,6 +36,8 @@ const TableData = tw.td`
 export function HistoryTable() {
 
   const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [nbrPerPage, setNbrPerPage] = useState(10);
 
   const productsData = useMemo(() => [...products], [products]);
 
@@ -121,19 +123,44 @@ export function HistoryTable() {
     state,
   } = tableInstance;
 
+  const getHistories = async () => {
+    console.log(page);
+    const response = await axios
+      .get("http://localhost:8080/histories?pageNumber=" + page + "&pageSize="+ nbrPerPage)
+      .catch((err) => console.log(err));
+
+    if (response) {
+      const histories = response.data;
+      setProducts(histories);
+    }
+  };
+
   useEffect(() => {
-    getHistories(setProducts);
-  }, []);
+    getHistories();
+  }, [page, nbrPerPage]);
 
   const isEven = (idx) => idx % 2 === 0;
 
   return (
     <>
-      <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        setGlobalFilter={setGlobalFilter}
-        globalFilter={state.globalFilter}
-      />
+      <div className="table-header">
+        <GlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          setGlobalFilter={setGlobalFilter}
+          globalFilter={state.globalFilter}
+        />
+        <div>
+          <span>Nombre par page: </span>
+          <select name="number-page-option"
+          id=""
+          onChange={(e) => setNbrPerPage(e.target.value)}
+          >
+            <option value="10">10</option>
+            <option value="7">7</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+      </div>
       <Table {...getTableProps()} className="table table-striped table-sm">
         <TableHead>
           {headerGroups.map((headerGroup) => (
@@ -146,6 +173,7 @@ export function HistoryTable() {
                   <span className="header_title">
                     {column.render("Header")}
                   </span>
+                  {column.isSorted ? (column.isSortedDesc ? " ▼" : " ▲") : " ▼"}
                   {/* {column.isSorted ? (column.isSortedDesc ? <SortAscendingOutlined /> : <SortDescendingOutlined />) : <SortDescendingOutlined />} */}
                 </TableHeader>
               ))}
@@ -172,6 +200,21 @@ export function HistoryTable() {
           })}
         </TableBody>
       </Table>
+      <div className="pagination">
+        <Button
+          onClick={() => page >= 2 ? setPage(page - 1) : null}
+        >
+          {'<'}
+        </Button>
+        <Button>
+          {page}
+        </Button>
+        <Button
+          onClick={() => setPage(page + 1)}
+        >
+          {'>'}
+        </Button>
+      </div>
     </>
   );
 }

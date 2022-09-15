@@ -48,29 +48,10 @@ export function Popovers({ row, setProducts, admissionName, setAdmissionName }) 
         <div style={{ marginBlock: ".7rem" }}
           onClick={() => {
             confirm({
-              title: "title",
+              title: "Modifier",
               icon: <ExclamationCircleOutlined />,
               content: <>
-                <form className="forms text-center">
-                  <div className="floating-form">
-                    <div className="floating-label">
-                      <input className="floating-input" type="text" defaultValue={row.values.medicineName} onChange={(e) => handleChangeMedicineName(e)} />
-                      <span className="input__label">Médicament: </span>
-                    </div>
-                    <div className="floating-label">
-                      <input className="floating-input" type="text" defaultValue="{treatmentList}" name="category" onChange={(e) => setTreatmentList(e.target.value)} value="{treatmentList}" />
-                      <span className="input__label">Traitement</span>
-                    </div>
-                    <div className="floating-label">
-                      <input className="floating-input" type="text" defaultValue={admissionName} name="price" onChange={(e) => console.log(e)} />
-                      <span className="input__label">Admission</span>
-                    </div>
-                    <div className="floating-label">
-                      <input className="floating-input" type="text" defaultValue={compartmentName} name="price" onChange={(e) => setCompartmentName(e.target.value)} />
-                      <span className="input__label">Compartiment</span>
-                    </div>
-                  </div>
-                </form>
+                En cours de construction
               </>,
               width: '30%',
               okText: 'Modifier',
@@ -96,10 +77,10 @@ export function Popovers({ row, setProducts, admissionName, setAdmissionName }) 
         <div
           onClick={() =>
             showConfirm(
-              <h4 style={{ fontSize: "1rem" }}>Êtes-vous sûr de vouloir supprimer cet élément ?</h4>,
+              <h4 style={{ fontSize: "1rem" }}>Êtes-vous sûr de vouloir supprimer ce médicament ?</h4>,
               <>
                 <p>Médicament: <span>{row.values.medicineName}</span></p>
-                <p>Compartiment: <span>{row.values.compartment.compartmentName}</span></p>
+                <p>Compartiment: <span>{row.values.compartment?.compartmentName}</span></p>
                 <p>Quantité: <span>{row.values.quantity}</span></p>
               </>,
               row.values.idMedicine,

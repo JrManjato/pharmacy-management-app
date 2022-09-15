@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const PostMedicine = async (objectToAdd) => {
+export const PostMedicine = async () => {
     const response = await axios
         .get("http://localhost:8080/create-medicine",
             {

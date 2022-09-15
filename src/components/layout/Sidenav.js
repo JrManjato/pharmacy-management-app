@@ -164,7 +164,7 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
         <Menu.Item key="2">
-          <NavLink to="/tables">
+          <NavLink to="/trafics">
             <span
               className="icon"
               style={{
@@ -173,11 +173,11 @@ function Sidenav({ color }) {
             >
               {tables}
             </span>
-            <span className="label">Tables</span>
+            <span className="label">Trafics</span>
           </NavLink>
         </Menu.Item>
         <Menu.Item key="3">
-          <NavLink to="/billing">
+          <NavLink to="/historique">
             <span
               className="icon"
               style={{
@@ -186,14 +186,14 @@ function Sidenav({ color }) {
             >
               {billing}
             </span>
-            <span className="label">Billing</span>
+            <span className="label">Historique</span>
           </NavLink>
         </Menu.Item>
         <Menu.Item className="menu-item-header" key="5">
-          Account Pages
+        ----------------------------------------------------
         </Menu.Item>
         <Menu.Item key="6">
-          <NavLink to="/profile">
+          <NavLink to="/ajout">
             <span
               className="icon"
               style={{
@@ -202,10 +202,10 @@ function Sidenav({ color }) {
             >
               {profile}
             </span>
-            <span className="label">Profile</span>
+            <span className="label">Ajout</span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="7">
+        {/* <Menu.Item key="7">
           <NavLink to="/sign-in">
             <span className="icon">{signin}</span>
             <span className="label">Sign In</span>
@@ -216,7 +216,7 @@ function Sidenav({ color }) {
             <span className="icon">{signup}</span>
             <span className="label">Sign Up</span>
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
       <div className="aside-footer">
         <div
@@ -229,7 +229,7 @@ function Sidenav({ color }) {
             {dashboard}
           </span>
           <Button type="primary" className="ant-btn-sm ant-btn-block">
-            DOCUMENTATION
+            Thème 
           </Button>
         </div>
       </div>

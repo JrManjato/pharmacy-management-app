@@ -12,6 +12,7 @@
 import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { showConfirm } from "../components/ux/AddConfirm";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   Row,
   Col,
@@ -22,12 +23,8 @@ import {
   Button,
   Avatar,
   Typography,
+  Menu
 } from "antd";
-
-import { Link } from "react-router-dom";
-
-// Images
-import pencil from "../assets/images/pencil.svg";
 
 import { Products } from "../medicine/MedicineData";
 
@@ -36,10 +33,13 @@ const { Title } = Typography;
 function Tables() {
 
   const [products, setProducts] = useState([]);
+  const [name, setName] = useState("");
   const [treatmentList, setTreatmentList] = useState([]);
   const [admissionList, setAdmissionList] = useState([]);
   const [treatmentFilter, setTreatmentFilter] = useState();
   const [admissionFilter, setAdmissionFilter] = useState();
+
+  const [compositionList, setCompositionList] = useState([]);
 
   const getTreatments = async () => {
     const response = await axios
@@ -87,8 +87,6 @@ function Tables() {
       treatmentFilterUrl = "http://localhost:8080/medicines?treatmentName=" + treatmentFilter + "&admissionName=" + admissionFilter + "&pageNumber=1&pageSize=10"
     }
 
-
-
     const response = await axios
       .get(treatmentFilterUrl)
       .catch((err) => console.log(err));
@@ -112,6 +110,33 @@ function Tables() {
   const handleChangeSelectTreatment = (e) => {
     setTreatmentFilter(e.currentTarget.value);
   }
+  var temp = ""
+  const handleAdd = (e) => {
+    e.preventDefault();
+    console.log('trying to add...');
+    console.log(temp);
+    if (temp) {
+      console.log(name);
+      setCompositionList([...compositionList, { id: Date.now(), name }]);
+    }
+  };
+
+  const deleteComponent = (e) => {
+    console.log('trying to delete...');
+    e.preventDefault();
+    var target = e.target;
+
+    while (target && target.nodeName !== "TR") {
+      target = target.parentNode;
+    }
+
+    const tdList = target.getElementsByTagName("TD");
+    const str = tdList[0].innerHTML;
+
+    setCompositionList(compositionList.filter((elt) => elt.id != str))
+
+  };
+
 
   return (
     <>
@@ -124,12 +149,12 @@ function Tables() {
               title="Liste des médicaments"
               extra={
                 <>
-                  <select name="task-evaluation" id="task-option" onChange={(e) => handleChangeSelectTreatment(e)}>
+                  <select id="task-option" onChange={(e) => handleChangeSelectTreatment(e)}>
                     {treatmentList.map((elt) => (
                       <option key={`${elt.idTreatment}`} value={elt.treatmentName}>{elt.treatmentName}</option>
                     ))}
                   </select>
-                  <select name="task-evaluation" id="task-option" onChange={(e) => handleChangeSelectAdmission(e)}>
+                  <select id="task-option" onChange={(e) => handleChangeSelectAdmission(e)}>
                     {admissionList.map((elt) => (
                       <option key={`${elt.idAdmission}`} value={elt.admissionName}>{elt.admissionName}</option>
                     ))}
@@ -140,27 +165,27 @@ function Tables() {
                   >
                     Filtrer
                   </Button>
-                  <Button
-                    onClick={() =>
-                      showConfirm(
-                        <h4 style={{ fontSize: "1rem" }}>Ajouter un nouveau médicament</h4>,
-                        <>
-                          
-                        </>
-                      )}
-                      style={{ color: "green", border: "1px solid green" }}
-                    >
-                  Ajouter
-                </Button>
+                  <div>
+                    <Menu theme="light" mode="inline">
+                      <Menu.Item key="6">
+                        <NavLink to="/ajout">
+                          <Button
+                          style={{color:"green", border:"1px solid green"}}>
+                            Ajouter
+                          </Button>
+                        </NavLink>
+                      </Menu.Item>
+                    </Menu>
+                  </div>
                 </>
               }
             >
-          <div className="table-responsive">
-            <Products products={products} setProducts={setProducts} />
-          </div>
-        </Card>
-      </Col>
-    </Row>
+              <div className="table-responsive">
+                <Products products={products} setProducts={setProducts} />
+              </div>
+            </Card>
+          </Col>
+        </Row>
       </div >
     </>
   );
