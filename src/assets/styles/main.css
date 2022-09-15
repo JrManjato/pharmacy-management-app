@@ -3046,3 +3046,64 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   path {
   fill: #8c8c8c;
 }
+
+.delete_icon {
+  color: red;
+}
+
+div.ant-card-extra {
+  display: flex;
+  justify-content: space-evenly;
+  width: 50%;
+  align-items: center;
+}
+
+#task-option {
+  border-radius: 10px;
+  text-align: center;
+}
+
+.pagination {
+  margin-right: 1rem;
+  margin-top: 1rem;
+  margin-bottom : 1rem;
+  width: 10%;
+  float: right;
+  display: flex;
+  justify-content: space-between;
+}
+
+.table-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.ant-card-head {
+  color: rgb(0, 184, 18);
+}
+
+h6.font-semibold {
+  text-align: center;
+}
+
+.floating-label {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.floating-input {
+  border-radius: 8px;
+}
+
+.floating-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+[name="task-evaluation"] {
+  border-radius: 8px;
+  width: 35%;
+}

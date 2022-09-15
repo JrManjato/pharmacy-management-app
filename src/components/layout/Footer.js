@@ -35,7 +35,7 @@ function Footer() {
                   className="nav-link text-muted"
                   target="_blank"
                 >
-                  Creative Tim
+                  Projet Final Spring
                 </a>
               </li>
             </ul>

@@ -1,11 +1,12 @@
+import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { useGlobalFilter, useSortBy, useTable } from "react-table";
 
-import { SortAscendingOutlined, SortDescendingOutlined, DeleteOutlined} from '@ant-design/icons';
+import { SortAscendingOutlined, SortDescendingOutlined, DeleteOutlined } from '@ant-design/icons';
 import tw from "twin.macro";
 
 import { GlobalFilter } from "../httpRequest/globalFilter";
-import { getHistories } from "../httpRequest/HttpRequest";
+import { showConfirm } from '../components/ux/DeleteConfirm'
 
 import { Button } from "antd";
 
@@ -33,7 +34,10 @@ const TableData = tw.td`
 
 
 export function HistoryTable() {
+
   const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [nbrPerPage, setNbrPerPage] = useState(10);
 
   const productsData = useMemo(() => [...products], [products]);
 
@@ -44,11 +48,25 @@ export function HistoryTable() {
       products[0]
         ? Object.keys(products[0])
           .map((key, i) => {
-            if (key === "medicine") {
+            if (key === "description") {
+              return {
+                Header: "Déscription",
+                accessor: key,
+                Cell: ({ value }) => value != null ? <span>{value}</span> : <span>vide</span>
+              }
+            }
+            else if (key === "medicine") {
               return {
                 Header: "Médicament",
                 accessor: key,
                 Cell: ({ value }) => <span>{value["medicineName"]}</span>
+              }
+            }
+            else if (key === "operationDateTime") {
+              return {
+                Header: "Date",
+                accessor: key,
+                Cell: ({ value }) => <span>{new Date(value).toLocaleDateString()}</span>
               }
             }
             return { Header: forHeader[i], accessor: key };
@@ -61,23 +79,24 @@ export function HistoryTable() {
     hooks.visibleColumns.push((columns) => [
       ...columns,
       {
-        id: "Edit",
-        Header: "Edit",
+        id: "Effacer",
+        Header: "Effacer",
         Cell: ({ row }) => (
-          <Button onClick={() => alert("Editing: " + row.values.price)}>
-            Edit
-          </Button>
-        ),
-      },
-      {
-        id: "Add",
-        Header: "Add",
-        Cell: ({ row }) => (
-            <DeleteOutlined 
-            onClick={() => alert("Delete Function")}
+          <DeleteOutlined
+            onClick={() =>
+              showConfirm(
+                <h4 style={{ fontSize: "1rem" }}>Êtes-vous sûr de vouloir supprimer cet élément ?</h4>,
+                <>
+                  <p>Médicament: <span>{row.values.medicine.medicineName}</span></p>
+                  <p>Opération: <span>{row.values.operation}</span></p>
+                  <p>Date: <span>{new Date(row.values.operationDateTime).toUTCString()}</span></p>
+                </>,
+                row.values.idHistory,
+                "history"
+              )}
             style={{ fontSize: '16px', color: 'red' }}
             theme="outlined"
-            />
+          />
         ),
       },
     ]);
@@ -104,19 +123,44 @@ export function HistoryTable() {
     state,
   } = tableInstance;
 
+  const getHistories = async () => {
+    console.log(page);
+    const response = await axios
+      .get("http://localhost:8080/histories?pageNumber=" + page + "&pageSize="+ nbrPerPage)
+      .catch((err) => console.log(err));
+
+    if (response) {
+      const histories = response.data;
+      setProducts(histories);
+    }
+  };
+
   useEffect(() => {
-    getHistories(setProducts);
-  }, []);
+    getHistories();
+  }, [page, nbrPerPage]);
 
   const isEven = (idx) => idx % 2 === 0;
 
   return (
     <>
-      <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        setGlobalFilter={setGlobalFilter}
-        globalFilter={state.globalFilter}
-      />
+      <div className="table-header">
+        <GlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          setGlobalFilter={setGlobalFilter}
+          globalFilter={state.globalFilter}
+        />
+        <div>
+          <span>Nombre par page: </span>
+          <select name="number-page-option"
+          id=""
+          onChange={(e) => setNbrPerPage(e.target.value)}
+          >
+            <option value="10">10</option>
+            <option value="7">7</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+      </div>
       <Table {...getTableProps()} className="table table-striped table-sm">
         <TableHead>
           {headerGroups.map((headerGroup) => (
@@ -129,6 +173,7 @@ export function HistoryTable() {
                   <span className="header_title">
                     {column.render("Header")}
                   </span>
+                  {column.isSorted ? (column.isSortedDesc ? " ▼" : " ▲") : " ▼"}
                   {/* {column.isSorted ? (column.isSortedDesc ? <SortAscendingOutlined /> : <SortDescendingOutlined />) : <SortDescendingOutlined />} */}
                 </TableHeader>
               ))}
@@ -143,7 +188,7 @@ export function HistoryTable() {
               <TableRow
                 {...row.getRowProps()}
                 className="table_row"
-                style={isEven(idx) ? {backgroundColor:""} : null}
+                style={isEven(idx) ? { backgroundColor: "" } : null}
               >
                 {row.cells.map((cell, idx) => (
                   <TableData {...cell.getCellProps()} className="table_cell">
@@ -155,6 +200,27 @@ export function HistoryTable() {
           })}
         </TableBody>
       </Table>
+      <div className="pagination">
+        <Button
+          onClick={() => page >= 2 ? setPage(page - 1) : null}
+        >
+          {'<'}
+        </Button>
+        <Button>
+          {page}
+        </Button>
+        <Button
+          onClick={() => setPage(page + 1)}
+        >
+          {'>'}
+        </Button>
+      </div>
     </>
   );
 }
+
+
+// "Êtes-vous sûr de vouloir supprimer cet élément ?",
+//               [row.values.medicine.medicineName, row.values.operation, new Date(row.values.operationDateTime)],
+//               row.values.idHistory,
+//               "history"

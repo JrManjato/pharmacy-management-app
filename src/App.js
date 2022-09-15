@@ -11,10 +11,10 @@
 */
 import { Switch, Route, Redirect } from "react-router-dom";
 import welcome from "./pages/welcome";
-import Home from "./pages/Home";
+import Home from "./pages/Trafic";
 import Tables from "./pages/Medicine";
-import History from "./pages/History";
-import Profile from "./pages/Profile";
+import HistoryFunc from "./pages/History.jsx";
+import Profile from "./pages/Adding";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Main from "./components/layout/Main";
@@ -30,11 +30,11 @@ function App() {
         <Route path="/sign-in" exact component={SignIn} />
         <Main>
           <Route exact path="/" component={welcome} />
-          <Route exact path="/dashboard" component={Home} />
-          <Route exact path="/tables" component={Tables} />
-          <Route exact path="/billing" component={History} />
-          <Route exact path="/profile" component={Profile} />
-          <Redirect from="*" to="/dashboard" />
+          <Route exact path="/médicament" component={Tables} />
+          <Route exact path="/trafics" component={Home} />
+          <Route exact path="/historique" component={HistoryFunc} />
+          <Route exact path="/ajout" component={Profile} />
+          <Redirect from="*" to="/médicament" />
         </Main>
       </Switch>
     </div>

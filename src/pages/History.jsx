@@ -21,7 +21,8 @@ import {
   Typography,
 } from "antd";
 
-import { Link } from "react-router-dom";
+import { Menu } from "antd";
+import { NavLink, useLocation } from "react-router-dom";
 
 // Images
 import pencil from "../assets/images/pencil.svg";
@@ -30,8 +31,7 @@ import { HistoryTable } from "../history/HistoryData";
 
 const { Title } = Typography;
 
-function HistoryFunc() {
-  const onChange = (e) => console.log(`radio checked:${e.target.value}`);
+function HistoryFunc({setPath, path}) {
 
   return (
     <>
@@ -42,18 +42,22 @@ function HistoryFunc() {
               bordered={false}
               className="criclebox tablespace mb-24"
               title="Historique"
-              extra={
-                <>
-                  <Radio.Group onChange={onChange} defaultValue="all">
-                    <Radio.Button value="all">All</Radio.Button>
-                    <Radio.Button value="online">ONLINE</Radio.Button>
-                    <Radio.Button value="store">STORES</Radio.Button>
-                  </Radio.Group>
-                </>
-              }
+              // extra={
+              //       <NavLink to="/dashboard">
+              //         <span
+              //           className="icon"
+              //           style={{
+                         
+              //           }}
+              //         >
+              //           tes
+              //         </span>
+              //         <span className="label">Dashboard</span>
+              //       </NavLink>
+              // }
             >
               <div className="table-responsive">
-                <HistoryTable />
+                <HistoryTable setPath={setPath} path={path}/>
               </div>
             </Card>
           </Col>

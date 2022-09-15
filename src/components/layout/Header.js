@@ -147,22 +147,20 @@ const clockicon = [
 
 const data = [
   {
-    title: "New message from Sophie",
-    description: <>{clockicon} 2 days ago</>,
+    title: "Les notifications s'afficheront ici.",
+    description: <>{clockicon} Approvisionnement, il y a 2 jours</>
+  }
+  // {
+  //   title: "New album by Travis Scott",
+  //   description: <>{clockicon} 2 days ago</>,
 
-    avatar: avtar,
-  },
-  {
-    title: "New album by Travis Scott",
-    description: <>{clockicon} 2 days ago</>,
-
-    avatar: <Avatar shape="square">{wifi}</Avatar>,
-  },
-  {
-    title: "Payment completed",
-    description: <>{clockicon} 2 days ago</>,
-    avatar: <Avatar shape="square">{credit}</Avatar>,
-  },
+  //   avatar: <Avatar shape="square">{wifi}</Avatar>,
+  // },
+  // {
+  //   title: "Payment completed",
+  //   description: <>{clockicon} 2 days ago</>,
+  //   avatar: <Avatar shape="square">{credit}</Avatar>,
+  // },
 ];
 
 const menu = (
@@ -293,7 +291,7 @@ function Header({
           </div>
         </Col>
         <Col span={24} md={18} className="header-control">
-          <Badge size="small" count={4}>
+          <Badge size="small" count={1}>
             <Dropdown overlay={menu} trigger={["click"]}>
               <a
                 href="#pablo"
@@ -325,13 +323,13 @@ function Header({
             <div layout="vertical">
               <div className="header-top">
                 <Title level={4}>
-                  Configurator
-                  <Text className="subtitle">See our dashboard options.</Text>
+                  Paramètre
+                  <Text className="subtitle">Options de tableau de bord.</Text>
                 </Title>
               </div>
 
               <div className="sidebar-color">
-                <Title level={5}>Sidebar Color</Title>
+                <Title level={5}>Couleur du sidebar</Title>
                 <div className="theme-color mb-2">
                   <ButtonContainer>
                     <Button
@@ -369,8 +367,8 @@ function Header({
                 </div>
 
                 <div className="sidebarnav-color mb-2">
-                  <Title level={5}>Sidenav Type</Title>
-                  <Text>Choose between 2 different sidenav types.</Text>
+                  <Title level={5}>Type de Sidenav</Title>
+                  <Text>Choisissez entre 2 types de sidenav différents.</Text>
                   <ButtonContainer className="trans">
                     <Button
                       type={sidenavType === "transparent" ? "primary" : "white"}
@@ -388,42 +386,42 @@ function Header({
                         setSidenavType("white");
                       }}
                     >
-                      WHITE
+                      Blanc
                     </Button>
                   </ButtonContainer>
                 </div>
                 <div className="fixed-nav mb-2">
-                  <Title level={5}>Navbar Fixed </Title>
+                  <Title level={5}>Barre de navigation fixe</Title>
                   <Switch onChange={(e) => handleFixedNavbar(e)} />
                 </div>
-                <div className="ant-docment">
+                {/* <div className="ant-docment">
                   <ButtonContainer>
                     <Button type="black" size="large">
                       FREE DOWNLOAD
                     </Button>
                     <Button size="large">VIEW DOCUMENTATION</Button>
                   </ButtonContainer>
-                </div>
-                <div className="viewstar">
+                </div> */}
+                {/* <div className="viewstar">
                   <a href="#pablo">{<StarOutlined />} Star</a>
                   <a href="#pablo"> 190</a>
-                </div>
+                </div> */}
 
                 <div className="ant-thank">
                   <Title level={5} className="mb-2">
-                    Thank you for sharing!
+                    {/* Thank you for sharing! */}
                   </Title>
                   <ButtonContainer className="social">
-                    <Button type="black">{<TwitterOutlined />}TWEET</Button>
-                    <Button type="black">{<FacebookFilled />}SHARE</Button>
+                    <Button type="black"><a href="https://twitter.com/JRandriamanjato">{<TwitterOutlined />}TWEET</a></Button>
+                    <Button type="black"><a href="https://www.facebook.com/judicael.randriamanjato.3/">{<FacebookFilled />}Facebook</a></Button>
                   </ButtonContainer>
                 </div>
               </div>
             </div>
           </Drawer>
-          <Link to="/sign-in" className="btn-sign-in">
+          <Link to="/" className="btn-sign-in">
             {profile}
-            <span>Log out</span>
+            <span>Se déconnecter</span>
           </Link>
         </Col>
       </Row>

@@ -38,14 +38,14 @@ export function GlobalFilter({
 
   return (
     <SearchContainer>
-      <SearchText>Search:</SearchText>
+      <SearchText>Recherche:</SearchText>
       <Input
         value={value || ""}
         onChange={(e) => {
           setValue(e.target.value);
           onChange(e.target.value);
         }}
-        placeholder={`${count} records...`}
+        placeholder={`${count} éléments...`}
       />
     </SearchContainer>
   );
