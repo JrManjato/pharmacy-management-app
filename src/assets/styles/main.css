@@ -3067,14 +3067,20 @@ div.ant-card-extra {
   margin-right: 1rem;
   margin-top: 1rem;
   margin-bottom : 1rem;
-  width: 10%;
+  width: 20%;
   float: right;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .table-header {
   display: flex;
+  align-items: center;
+}
+
+.table-filter {
+  display: flex;
+  justify-content: space-evenly;
   width: 100%;
   align-items: center;
 }

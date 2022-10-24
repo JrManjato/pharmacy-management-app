@@ -1,17 +1,17 @@
-import React, { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import React, { useMemo, useState } from "react";
 import { useGlobalFilter, useSortBy, useTable } from "react-table";
 import { putMedicinesTrafic } from "../httpRequest/Put";
+import Pagination from "../components/Pagination";
 
-import { SortAscendingOutlined, SortDescendingOutlined, UploadOutlined, DownloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { UploadOutlined, DownloadOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import tw from "twin.macro";
 
 import { GlobalFilter } from "../httpRequest/globalFilter";
-import { getMedicines } from "../httpRequest/Get";
-
-import { Popovers } from "../components/ux/PopOver"
 
 import { Button, Modal } from "antd";
 import './table.css';
+import pagination from "../components/Pagination";
 
 const Table = tw.table`
 
@@ -37,7 +37,12 @@ const TableData = tw.td`
 
 
 
-export function Trafic({products, setProducts}) {
+export function Trafic() {
+    const [products, setProducts] = useState([]);
+    const [threshold, setThreshold] = useState(9999);
+    const [page, setPage] = useState(1);
+    const [nbrPerPage, setNbrPerPage] = useState(5);
+    const [tes, setTes] = useState(1);
 
     const productsData = useMemo(() => [...products], [products]);
 
@@ -89,7 +94,6 @@ export function Trafic({products, setProducts}) {
                                             <div className="floating-label">
                                                 <span
                                                     className="input__label"
-                                                    style={{ marginRight: "1.15rem" }}
                                                 >Quantité:</span>
                                                 <input className="floating-input" type="text" onChange={(e) => quantity = e.target.value} />
                                             </div>
@@ -102,7 +106,7 @@ export function Trafic({products, setProducts}) {
                                 width: 1000,
                                 height: 600,
                                 onOk() {
-                                    putMedicinesTrafic(row.values.idMedicine, description, "approvisionemment", quantity, "replenishement");
+                                    putMedicinesTrafic(row.values.idMedicine, description, "approvisionemment", quantity, "replenishement", setTes, tes);
                                 },
 
                                 onCancel() {
@@ -133,7 +137,6 @@ export function Trafic({products, setProducts}) {
                                             <div className="floating-label">
                                                 <span
                                                     className="input__label"
-                                                    style={{ marginRight: "1.15rem" }}
                                                 >Quantité:</span>
                                                 <input className="floating-input" type="text" onChange={(e) => quantity = e.target.value} />
                                             </div>
@@ -146,7 +149,7 @@ export function Trafic({products, setProducts}) {
                                 width: 1000,
                                 height: 600,
                                 onOk() {
-                                    putMedicinesTrafic(row.values.idMedicine, description, "export", quantity, "consumption");
+                                    putMedicinesTrafic(row.values.idMedicine, description, "export", quantity, "consumption", setTes, tes);
                                 },
 
                                 onCancel() {
@@ -182,19 +185,63 @@ export function Trafic({products, setProducts}) {
         state,
     } = tableInstance;
 
-    useEffect(() => {
-        getMedicines(setProducts);
-    }, []);
+    React.useEffect(() => {
 
-    const isEven = (idx) => idx % 2 === 0;
+        const abortController = new AbortController();
+
+        axios
+            .get("http://localhost:8080/medicines/" + threshold + "?pageNumber=" + page + "&pageSize=" + nbrPerPage,
+                { signal: abortController.signal, }
+            )
+            .then((response) => {
+                setProducts(response?.data)
+            })
+            .catch((error) => {
+                console.log('Error', error);
+            })
+        return () => {
+            abortController.abort();
+        }
+
+    }, [page, nbrPerPage, threshold, tes]);
+
 
     return (
         <>
-            <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                setGlobalFilter={setGlobalFilter}
-                globalFilter={state.globalFilter}
-            />
+            <div className="table-header">
+                <GlobalFilter
+                    preGlobalFilteredRows={preGlobalFilteredRows}
+                    setGlobalFilter={setGlobalFilter}
+                    globalFilter={state.globalFilter}
+                />
+                <div className="table-filter">
+                    <div>
+                        <span>Nombre par page: </span>
+                        <select name="number-page-option"
+                            id=""
+                            onChange={(e) => setNbrPerPage(e.target.value)}
+                        >
+                            <option value="5">5</option>
+                            <option value="7">7</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <div
+                    >
+                        <span>Quantité inférieur ou égal à:  <select name="number-page-option"
+                            id=""
+                            onChange={(e) => setThreshold(e.target.value)}
+                        >
+                            <option value="">---</option>
+                            <option value="300">300</option>
+                            <option value="200">200</option>
+                            <option value="100">100</option>
+                            <option value="0">0</option>
+                        </select>
+                        </span>
+                    </div>
+                </div>
+            </div>
             <Table {...getTableProps()} className="table table-striped table-sm" style={{ margin: "auto" }}>
                 <TableHead>
                     {headerGroups.map((headerGroup) => (
@@ -222,7 +269,6 @@ export function Trafic({products, setProducts}) {
                             <TableRow
                                 {...row.getRowProps()}
                                 className="table_row"
-                                style={isEven(idx) ? { backgroundColor: "" } : null}
                             >
                                 {row.cells.map((cell, idx) => (
                                     <TableData {...cell.getCellProps()} className="table_cell">
@@ -234,6 +280,7 @@ export function Trafic({products, setProducts}) {
                     })}
                 </TableBody>
             </Table>
+            <Pagination page={page} setPage={setPage} />
         </>
     );
 }

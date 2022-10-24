@@ -6,10 +6,9 @@ import { showConfirm } from './DeleteConfirm'
 import { UpdateMedicineConfirm } from './UpdateConfirm'
 import { putMedicines } from "../../httpRequest/Put";
 
-export function Popovers({ row, setProducts, admissionName, setAdmissionName }) {
+export function Popovers({ row, setProducts, admissionName, setTes, tes }) {
 
   const [idMedicine, setIdMedicine] = useState(row.values.idMedicine);
-  const [medicineName, setMedicineName] = useState(row.values.medicineName);
   const [treatmentList, setTreatmentList] = useState(row.values.treatmentList);
   const [compartmentName, setCompartmentName] = useState(row.values.compartment?.compartmentName);
 
@@ -84,7 +83,9 @@ export function Popovers({ row, setProducts, admissionName, setAdmissionName }) 
                 <p>Quantité: <span>{row.values.quantity}</span></p>
               </>,
               row.values.idMedicine,
-              "medicine"
+              "medicine",
+              setTes,
+              tes
             )
           }
         >

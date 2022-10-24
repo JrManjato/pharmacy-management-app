@@ -12,26 +12,12 @@
 import {
   Row,
   Col,
-  Card,
-  Radio,
-  Table,
-  Progress,
-  Button,
-  Avatar,
-  Typography,
+  Card
 } from "antd";
-
-import { Menu } from "antd";
-import { NavLink, useLocation } from "react-router-dom";
-
-// Images
-import pencil from "../assets/images/pencil.svg";
 
 import { HistoryTable } from "../history/HistoryData";
 
-const { Title } = Typography;
-
-function HistoryFunc({setPath, path}) {
+function HistoryFunc() {
 
   return (
     <>
@@ -42,22 +28,9 @@ function HistoryFunc({setPath, path}) {
               bordered={false}
               className="criclebox tablespace mb-24"
               title="Historique"
-              // extra={
-              //       <NavLink to="/dashboard">
-              //         <span
-              //           className="icon"
-              //           style={{
-                         
-              //           }}
-              //         >
-              //           tes
-              //         </span>
-              //         <span className="label">Dashboard</span>
-              //       </NavLink>
-              // }
             >
               <div className="table-responsive">
-                <HistoryTable setPath={setPath} path={path}/>
+                <HistoryTable />
               </div>
             </Card>
           </Col>
