@@ -31,13 +31,8 @@ export const putMedicines = async (setProducts, idMedicine, medicineName, treatm
     }
 };
 
-export const putMedicinesTrafic = async (idMedicine, description, operation, quantity, scale) => {
+export const putMedicinesTrafic = async (idMedicine, description, operation, quantity, scale, setTes, tes) => {
 
-    console.log(idMedicine);
-    console.log(description);
-    console.log(operation);
-    console.log(quantity);
-    console.log(scale);
     const response = await axios
         .put("http://localhost:8080/medicine/" + scale + "/" + idMedicine,
             {
@@ -48,7 +43,8 @@ export const putMedicinesTrafic = async (idMedicine, description, operation, qua
         .catch((err) => console.log(err));
 
     if (response) {
-        console.log(response);
+        tes = tes + 1;
+        setTes(tes);
         if (scale == "replenishement") {
             success("Le médicament a bien été approvisionné !");
         }else if (scale == "consumption"){

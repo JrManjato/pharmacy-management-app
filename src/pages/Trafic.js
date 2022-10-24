@@ -9,9 +9,6 @@
 =========================================================
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import axios from "axios";
-import React, { useEffect, useMemo, useState } from "react";
-import { showConfirm } from "../components/ux/AddConfirm";
 import {
   Row,
   Col,
@@ -29,20 +26,7 @@ import { Trafic } from "../medicine/TraficTable";
 const { Title } = Typography;
 
 function Tables() {
-  const [products, setProducts] = useState([]);
-  const [threshold, setThreshold] = useState(300);
 
-  const getMedicinesByThreshold = async () => {
-    const response = await axios
-        .get("http://localhost:8080/medicines/"+threshold+"?pageNumber=1&pageSize=100")
-        .catch((err) => console.log(err));
-
-    if (response) {
-        const medicines = response.data;
-        setProducts(medicines);
-    }
-    
-};
   return (
     <>
       <div className="tabled">
@@ -52,27 +36,9 @@ function Tables() {
               bordered={false}
               className="criclebox tablespace mb-24"
               title="Approvisionnement / Achats | Export"
-              extra={
-                <>
-                  <span>Quantité inférieur ou égal à:  <select name="number-page-option"
-                    id=""
-                    onChange={(e) => setThreshold(e.target.value)}
-                  >
-                    <option value="300">300</option>
-                    <option value="200">200</option>
-                    <option value="100">100</option>
-                    <option value="0">0</option>
-                  </select>
-                  </span>
-                  <Button
-                  onClick={getMedicinesByThreshold}>
-                    Filtrer
-                  </Button>
-                </>
-              }
             >
               <div className="table-responsive">
-                <Trafic products={products} setProducts={setProducts} />
+                <Trafic />
               </div>
             </Card>
           </Col>

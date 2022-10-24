@@ -1,14 +1,15 @@
 import axios from "axios";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useGlobalFilter, useSortBy, useTable } from "react-table";
 
-import { SortAscendingOutlined, SortDescendingOutlined, DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import tw from "twin.macro";
 
 import { GlobalFilter } from "../httpRequest/globalFilter";
 import { showConfirm } from '../components/ux/DeleteConfirm'
 
 import { Button } from "antd";
+import Pagination from "../components/Pagination";
 
 const Table = tw.table`
 
@@ -37,7 +38,8 @@ export function HistoryTable() {
 
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
-  const [nbrPerPage, setNbrPerPage] = useState(10);
+  const [nbrPerPage, setNbrPerPage] = useState(5);
+  const [tes, setTes] = useState(10);
 
   const productsData = useMemo(() => [...products], [products]);
 
@@ -92,7 +94,9 @@ export function HistoryTable() {
                   <p>Date: <span>{new Date(row.values.operationDateTime).toUTCString()}</span></p>
                 </>,
                 row.values.idHistory,
-                "history"
+                "history",
+                setTes,
+                tes
               )}
             style={{ fontSize: '16px', color: 'red' }}
             theme="outlined"
@@ -123,21 +127,27 @@ export function HistoryTable() {
     state,
   } = tableInstance;
 
-  const getHistories = async () => {
-    console.log(page);
-    const response = await axios
-      .get("http://localhost:8080/histories?pageNumber=" + page + "&pageSize="+ nbrPerPage)
-      .catch((err) => console.log(err));
+  React.useEffect(() => {
 
-    if (response) {
-      const histories = response.data;
-      setProducts(histories);
+    const abortController = new AbortController();
+
+    axios
+      .get("http://localhost:8080/histories?pageNumber=" + page + "&pageSize=" + nbrPerPage,
+        { signal: abortController.signal, }
+      )
+      .then((response) => {
+        setProducts(response?.data)
+      })
+      .catch((error) => {
+        console.log('Error', error);
+      })
+    return () => {
+      abortController.abort();
     }
-  };
 
-  useEffect(() => {
-    getHistories();
-  }, [page, nbrPerPage]);
+  }, [tes, nbrPerPage, page]);
+
+
 
   const isEven = (idx) => idx % 2 === 0;
 
@@ -152,12 +162,12 @@ export function HistoryTable() {
         <div>
           <span>Nombre par page: </span>
           <select name="number-page-option"
-          id=""
-          onChange={(e) => setNbrPerPage(e.target.value)}
+            id=""
+            onChange={(e) => setNbrPerPage(e.target.value)}
           >
-            <option value="10">10</option>
-            <option value="7">7</option>
             <option value="5">5</option>
+            <option value="7">7</option>
+            <option value="10">10</option>
           </select>
         </div>
       </div>
@@ -200,27 +210,7 @@ export function HistoryTable() {
           })}
         </TableBody>
       </Table>
-      <div className="pagination">
-        <Button
-          onClick={() => page >= 2 ? setPage(page - 1) : null}
-        >
-          {'<'}
-        </Button>
-        <Button>
-          {page}
-        </Button>
-        <Button
-          onClick={() => setPage(page + 1)}
-        >
-          {'>'}
-        </Button>
-      </div>
+      <Pagination page={page} setPage={setPage} />
     </>
   );
 }
-
-
-// "Êtes-vous sûr de vouloir supprimer cet élément ?",
-//               [row.values.medicine.medicineName, row.values.operation, new Date(row.values.operationDateTime)],
-//               row.values.idHistory,
-//               "history"

@@ -4,7 +4,7 @@ import { Modal } from 'antd';
 
 const { confirm } = Modal;
 
-export const showConfirm = (title, content, id, scale) => {
+export const showConfirm = (title, content, id, scale, setTes, tes) => {
     confirm({
       title: title,
       icon: <ExclamationCircleOutlined />,
@@ -14,9 +14,9 @@ export const showConfirm = (title, content, id, scale) => {
       cancelText: 'Non',
       onOk() {
         if (scale === "history") {
-          DeleteHistory(id);
+          DeleteHistory(id, setTes, tes);
         }else if(scale === "medicine") {
-          DeleteMedicine(id);
+          DeleteMedicine(id, setTes, tes);
         }
       },
   
